@@ -9,22 +9,14 @@ app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + SQLITE_DATABASE_NAME
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-
+app.config['SECRET_KEY'] = "anti-amogus"
 db.app = app
 db.init_app(app)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
 
-@app.route('/guestbook')
-def guest_book():
-
-    posts = Post.query.order_by(Post.id.desc()).all()
-    return render_template('guestbook.html', posts=posts)
-
-@app.route('/add_post', methods=['GET', 'POST'])
-def add_post():
+    ps = Post.query.order_by(Post.id.desc()).all()
 
     if request.method == 'POST':
         name = request.form.get('name', type=str, default='')
@@ -32,11 +24,11 @@ def add_post():
 
         if not name:
             flash('Пожлуйста, укажите своё имя!')
-            return render_template('add_post.html')
+            return render_template('index.html', posts=ps)
 
         if not text:
             flash('Отзыв не может быть пустым.')
-            return render_template('add_post.html')
+            return render_template('index.html', posts=ps)
 
         try:
             post = Post(name=name, text=text)
@@ -45,9 +37,18 @@ def add_post():
         except:
             print('Fatall error wile adding new post')
 
-        return redirect(url_for('guest_book'))
+        ps = Post.query.order_by(Post.id.desc()).all()
 
-    return render_template('add_post.html')
+        return render_template('index.html', posts=ps)
+
+    return render_template('index.html', posts=ps)
+
+@app.route('/guestbook')
+def guest_book():
+
+    posts = Post.query.order_by(Post.id.desc()).all()
+    return render_template('guestbook.html', posts=posts)
+
 
 if __name__ == '__main__':
 
