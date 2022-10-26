@@ -1,5 +1,4 @@
 import sys
-import os
 
 from flask import Flask, render_template, request, flash, url_for, redirect
 
@@ -8,7 +7,7 @@ from model import db, db_init, Post
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.getcwd() + '/' + SQLITE_DATABASE_NAME
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + SQLITE_DATABASE_NAME
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db.app = app
