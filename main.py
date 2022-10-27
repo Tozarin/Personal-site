@@ -49,6 +49,10 @@ def guest_book():
     posts = Post.query.order_by(Post.id.desc()).all()
     return render_template('guestbook.html', posts=posts)
 
+@app.route('/yandex_8565fd849978eca0')
+def yandexwebvisor():
+    return render_template('yandex_8565fd849978eca0.html')
+
 
 if __name__ == '__main__':
 
